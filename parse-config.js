@@ -62,7 +62,13 @@ module.exports = function (text) {
                 var _replace = isReplaceFn ? replace(context) : replace;
                 return content.replace(_match, _replace);
             };
-        })
+        }),
+        ignore: (url) => {
+            return (config.ignore || []).some((ignore) => {
+            let regex = new RegExp(ignore)
+            return regex.test(url)
+          })
+        }
     };
 };
 

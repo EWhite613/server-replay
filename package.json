@@ -10,6 +10,7 @@
     "server-replay": "./cli.js"
   },
   "dependencies": {
+    "http-proxy": "^1.18.0",
     "mime": "^1.2.11",
     "yargs": "^1.3.2"
   },

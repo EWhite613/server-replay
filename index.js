@@ -20,6 +20,8 @@ var URL = require("url");
 var PATH = require("path");
 var mime = require("mime");
 var heuristic = require("./heuristic");
+var httpProxy = require('http-proxy');
+var proxyServer = httpProxy.createProxyServer({secure: false})
 
 exports = module.exports = serverReplay;
 function serverReplay(har, options) {
@@ -32,6 +34,7 @@ function serverReplay(har, options) {
 exports.makeRequestListener = makeRequestListener;
 function makeRequestListener(entries, options) {
     var config = options.config;
+    var proxy = options.proxy
     var resolvePath = options.resolvePath;
     var debug = options.debug;
     // for mocking
@@ -77,7 +80,7 @@ function makeRequestListener(entries, options) {
             fs.readFile(localPath, function (err, content) {
                 if (err) {
                     console.error("Error: Could not read", localPath, "requested from", request.url);
-                    serveError(request.url, response, null, localPath);
+                    serveError(request.url, response, null, {localPath});
                     return;
                 }
 
@@ -85,7 +88,7 @@ function makeRequestListener(entries, options) {
                 serveEntry(request, response, entry, config);
             });
         } else {
-            if (!serveError(request.url, response, entry && entry.response)) {
+            if (!serveError(request.url, response, entry && entry.response, {proxy, request, config})) {
                 serveEntry(request, response, entry, config);
             }
         }
@@ -93,9 +96,14 @@ function makeRequestListener(entries, options) {
     };
 }
 
-function serveError(requestUrl, response, entryResponse, localPath) {
-    if (!entryResponse) {
+function serveError(requestUrl, response, entryResponse, {localPath, proxy, request, config} = {}) {
+    console.log('Ignore?', requestUrl, config.ignore(requestUrl))
+    if (!entryResponse || (config && config.ignore(requestUrl))) {
         console.log("Not found:", requestUrl);
+        if (proxy) {
+          proxyServer.web(request, response, { target: proxy });
+          return true
+        }
         response.writeHead(404, "Not found", {"content-type": "text/plain"});
         response.end("404 Not found" + (localPath ? ", while looking for " + localPath : ""));
         return true;

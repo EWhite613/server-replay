@@ -37,13 +37,29 @@ var argv = require("yargs")
             alias: "debug",
             describe: "Turn on debug logging",
             boolean: true
+        },
+        pr: {
+            alias: "proxy",
+            describe: "The proxy target"
         }
     })
     .demand(1)
     .argv;
 
-var harPath = argv._[0];
-var har = JSON.parse(fs.readFileSync(harPath));
+var har = argv._.reduce(function (mergedHar, harPath) {
+    var har = JSON.parse(fs.readFileSync(harPath));
+    var entries = mergedHar.log.entries.concat(har.log.entries)
+    return {
+        log: {
+            entries
+        }
+    }
+}, {
+    log: {
+        entries: []
+    }
+})
+
 
 var configPath = argv.config;
 if (!configPath) {
@@ -67,7 +83,8 @@ serverReplay(har, {
     config: config,
     resolvePath: PATH.dirname(configPath),
     port: argv.port,
-    debug: argv.debug
+    debug: argv.debug,
+    proxy: argv.proxy
 });
 
 console.log("Listening at http://localhost:" + argv.port);

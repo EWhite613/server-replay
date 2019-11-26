@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "mappings": [
+  ],
+  "replacements": [
+      {"match": "https", "replace": "http"}
+  ],
+  "ignore": ["/tron/api/v1/current-user"]
+}
