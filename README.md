@@ -14,7 +14,7 @@ It works by starting a proxy server and serving content from a previously saved 
 ## Installation
 
 ```
-npm install -g server-replay
+npm install -g frost-server-replay
 ```
 
 ## Running
@@ -30,6 +30,7 @@ Options:
   -c, --config  The config file to use
   -p, --port    The port to run the proxy server on  [default: 8080]
   -d, --debug   Turn on debug logging
+  --proxy       The server to proxy not found calls to
 ```
 
 See the [Setup section for details on creating `.har` file and using the proxy in your browser](#setup).
