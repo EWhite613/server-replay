@@ -99,11 +99,12 @@ function makeRequestListener(entries, options) {
 function serveError(requestUrl, response, entryResponse, {localPath, proxy, request, config} = {}) {
     console.log('Ignore?', requestUrl, config.ignore(requestUrl))
     if (!entryResponse || (config && config.ignore(requestUrl))) {
-        console.log("Not found:", requestUrl);
         if (proxy) {
+          console.log("Proxying:", requestUrl);
           proxyServer.web(request, response, { target: proxy });
           return true
         }
+        console.log("Not found:", requestUrl);
         response.writeHead(404, "Not found", {"content-type": "text/plain"});
         response.end("404 Not found" + (localPath ? ", while looking for " + localPath : ""));
         return true;
