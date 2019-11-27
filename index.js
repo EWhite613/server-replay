@@ -97,7 +97,6 @@ function makeRequestListener(entries, options) {
 }
 
 function serveError(requestUrl, response, entryResponse, {localPath, proxy, request, config} = {}) {
-    console.log('Ignore?', requestUrl, config.ignore(requestUrl))
     if (!entryResponse || (config && config.ignore(requestUrl))) {
         if (proxy) {
           console.log("Proxying:", requestUrl);
