@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0",
+  "version": "0.0.1",
   "name": "frost-server-replay",
   "description": "Replay server responses from a HAR file",
   "main": "index.js",
