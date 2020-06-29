@@ -15,7 +15,7 @@
  */
 
 var _fs = require("fs");
-var http = require("http");
+var https = require('https');
 var URL = require("url");
 var PATH = require("path");
 var mime = require("mime");
@@ -24,8 +24,14 @@ var httpProxy = require('http-proxy');
 var proxyServer = httpProxy.createProxyServer({secure: false})
 
 exports = module.exports = serverReplay;
+
+var httpsOptions = {
+    key: _fs.readFileSync('key.pem'),
+    cert: _fs.readFileSync('cert.pem')
+  }
+
 function serverReplay(har, options) {
-    var server = http.createServer(makeRequestListener(har.log.entries, options));
+    var server = https.createServer(httpsOptions, makeRequestListener(har.log.entries, options));
 
     server.listen(options.port);
 }

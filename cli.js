@@ -87,5 +87,5 @@ serverReplay(har, {
     proxy: argv.proxy
 });
 
-console.log("Listening at http://localhost:" + argv.port);
+console.log("Listening at https://localhost:" + argv.port);
 console.log("Try " + har.log.entries[0].request.url.replace(/^https/, "http"));
